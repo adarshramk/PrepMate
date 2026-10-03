@@ -1,0 +1,83 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ElasticBeanstalkDeploy",
+      "Effect": "Allow",
+      "Action": [
+        "elasticbeanstalk:CreateApplication",
+        "elasticbeanstalk:CreateApplicationVersion",
+        "elasticbeanstalk:CreateEnvironment",
+        "elasticbeanstalk:CreateStorageLocation",
+        "elasticbeanstalk:UpdateEnvironment",
+        "elasticbeanstalk:DescribeApplications",
+        "elasticbeanstalk:DescribeEnvironments",
+        "elasticbeanstalk:DescribeEvents",
+        "elasticbeanstalk:ListAvailableSolutionStacks",
+        "elasticbeanstalk:ValidateConfigurationSettings",
+        "elasticbeanstalk:CheckDNSAvailability"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "EC2ForEB",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:DescribeInstances",
+        "ec2:DescribeInstanceTypes",
+        "ec2:DescribeVpcs",
+        "ec2:DescribeSubnets",
+        "ec2:DescribeSecurityGroups",
+        "ec2:DescribeKeyPairs",
+        "ec2:DescribeAvailabilityZones",
+        "ec2:RunInstances",
+        "ec2:TerminateInstances",
+        "ec2:CreateSecurityGroup",
+        "ec2:AuthorizeSecurityGroupIngress"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "IAMForEB",
+      "Effect": "Allow",
+      "Action": [
+        "iam:PassRole",
+        "iam:CreateServiceLinkedRole"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "CloudWatchLogsForEB",
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "logs:DescribeLogGroups"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "AutoScalingForEB",
+      "Effect": "Allow",
+      "Action": [
+        "autoscaling:CreateLaunchConfiguration",
+        "autoscaling:CreateAutoScalingGroup",
+        "autoscaling:DescribeAutoScalingGroups",
+        "autoscaling:DescribeLaunchConfigurations",
+        "autoscaling:PutScalingPolicy"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "ELBForEB",
+      "Effect": "Allow",
+      "Action": [
+        "elasticloadbalancing:CreateLoadBalancer",
+        "elasticloadbalancing:DescribeLoadBalancers",
+        "elasticloadbalancing:RegisterInstancesWithLoadBalancer"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AppRunnerDeploy",
+      "Effect": "Allow",
+      "Action": [
+        "apprunner:CreateService",
+        "apprunner:ListServices",
+        "apprunner:DescribeService",
+        "apprunner:UpdateService",
+        "apprunner:DeleteService",
+        "apprunner:ListOperations",
+        "apprunner:ListTagsForResource",
+        "apprunner:CreateConnection",
+        "apprunner:ListConnections",
+        "apprunner:DescribeCustomDomains",
+        "apprunner:StartDeployment"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "IAMPassRoleForAppRunner",
+      "Effect": "Allow",
+      "Action": [
+        "iam:PassRole",
+        "iam:CreateServiceLinkedRole"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "iam:PassedToService": "build.apprunner.amazonaws.com"
+        }
+      }
+    },
+    {
+      "Sid": "ECRForAppRunner",
+      "Effect": "Allow",
+      "Action": [
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:BatchGetImage",
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:DescribeRepositories",
+        "ecr:ListImages",
+        "ecr:CreateRepository",
+        "ecr:GetAuthorizationToken"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
