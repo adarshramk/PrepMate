@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Log In — PrepMate{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+  <div class="auth-card">
+    <div class="auth-header">
+      <span class="auth-icon">🎓</span>
+      <h1 class="auth-title">Welcome back</h1>
+      <p class="auth-subtitle">Log in to continue your preparation</p>
+    </div>
+
+    <form method="POST" action="{{ url_for('auth.login') }}" novalidate class="auth-form"
+          aria-label="Login form">
+      <div class="form-group">
+        <label class="form-label" for="email">Email address</label>
+        <input
+          class="form-input"
+          type="email"
+          id="email"
+          name="email"
+          value="{{ email|default('') }}"
+          placeholder="you@college.edu"
+          required
+          autocomplete="email"
+          aria-required="true"
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <div class="input-wrapper">
+          <input
+            class="form-input"
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Your password"
+            required
+            autocomplete="current-password"
+            aria-required="true"
+          />
+          <button type="button" class="toggle-password" aria-label="Show password"
+                  data-target="password">👁</button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn--primary btn--full">Log In</button>
+    </form>
+
+    <p class="auth-footer">
+      Don't have an account?
+      <a href="{{ url_for('auth.register') }}">Sign up free</a>
+    </p>
+  </div>
+</section>
+{% endblock %}

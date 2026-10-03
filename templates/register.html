@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Sign Up — PrepMate{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+  <div class="auth-card">
+    <div class="auth-header">
+      <span class="auth-icon">🎓</span>
+      <h1 class="auth-title">Create your account</h1>
+      <p class="auth-subtitle">Start your placement preparation today</p>
+    </div>
+
+    <form method="POST" action="{{ url_for('auth.register') }}" novalidate class="auth-form"
+          aria-label="Registration form">
+      <div class="form-group">
+        <label class="form-label" for="name">Full name</label>
+        <input
+          class="form-input"
+          type="text"
+          id="name"
+          name="name"
+          value="{{ name|default('') }}"
+          placeholder="Your full name"
+          required
+          autocomplete="name"
+          aria-required="true"
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="email">Email address</label>
+        <input
+          class="form-input"
+          type="email"
+          id="email"
+          name="email"
+          value="{{ email|default('') }}"
+          placeholder="you@college.edu"
+          required
+          autocomplete="email"
+          aria-required="true"
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <div class="input-wrapper">
+          <input
+            class="form-input"
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Min. 8 characters"
+            required
+            autocomplete="new-password"
+            aria-required="true"
+            aria-describedby="password-hint"
+          />
+          <button type="button" class="toggle-password" aria-label="Show password"
+                  data-target="password">👁</button>
+        </div>
+        <span class="form-hint" id="password-hint">At least 8 characters.</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="confirm_password">Confirm password</label>
+        <div class="input-wrapper">
+          <input
+            class="form-input"
+            type="password"
+            id="confirm_password"
+            name="confirm_password"
+            placeholder="Repeat your password"
+            required
+            autocomplete="new-password"
+            aria-required="true"
+          />
+          <button type="button" class="toggle-password" aria-label="Show confirm password"
+                  data-target="confirm_password">👁</button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn--primary btn--full">Create Account</button>
+    </form>
+
+    <p class="auth-footer">
+      Already have an account?
+      <a href="{{ url_for('auth.login') }}">Log in</a>
+    </p>
+  </div>
+</section>
+{% endblock %}

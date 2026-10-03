@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block title %}New Roadmap — PrepMate{% endblock %}
+
+{% block content %}
+<section class="dash-header">
+  <div class="container">
+    <h1 class="dash-title">Generate a <span class="text-accent">Preparation Roadmap</span></h1>
+    <p class="dash-subtitle">Tell us about your goals and we'll build a personalised weekly plan.</p>
+  </div>
+</section>
+
+<div class="container planner-form-wrap">
+  <div class="planner-form-card">
+
+    <form method="POST"
+          action="{{ url_for('planner.planner_generate') }}"
+          class="auth-form"
+          id="planner-form"
+          novalidate
+          aria-label="Roadmap generation form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <!-- Target Role -->
+      <div class="form-group">
+        <label class="form-label" for="target_role">
+          Target Role <span aria-hidden="true">*</span>
+        </label>
+        <input class="form-input"
+               id="target_role"
+               name="target_role"
+               type="text"
+               value="{{ target_role | default('') }}"
+               placeholder="e.g. Backend Engineer, Data Analyst, Cloud Architect"
+               maxlength="100"
+               required
+               aria-required="true">
+        <span class="form-hint">The job title you are preparing for.</span>
+      </div>
+
+      <!-- Current Skills -->
+      <div class="form-group">
+        <label class="form-label" for="skills">
+          Current Skills <span aria-hidden="true">*</span>
+        </label>
+        <textarea class="form-input form-textarea"
+                  id="skills"
+                  name="skills"
+                  rows="3"
+                  maxlength="500"
+                  required
+                  aria-required="true"
+                  placeholder="e.g. Python basics, HTML/CSS, familiar with Git, no DSA experience">{{ skills | default('') }}</textarea>
+        <span class="form-hint">Be honest — this helps tailor the plan to your starting point (max 500 chars).</span>
+      </div>
+
+      <!-- Hours per day -->
+      <div class="planner-form-row">
+        <div class="form-group">
+          <label class="form-label" for="hours_per_day">
+            Study Hours / Day <span aria-hidden="true">*</span>
+          </label>
+          <input class="form-input"
+                 id="hours_per_day"
+                 name="hours_per_day"
+                 type="number"
+                 value="{{ hours_per_day | default('2') }}"
+                 min="0.5" max="16" step="0.5"
+                 required
+                 aria-required="true">
+          <span class="form-hint">0.5 – 16 hours</span>
+        </div>
+
+        <!-- Duration -->
+        <div class="form-group">
+          <label class="form-label" for="duration_weeks">
+            Duration (weeks) <span aria-hidden="true">*</span>
+          </label>
+          <input class="form-input"
+                 id="duration_weeks"
+                 name="duration_weeks"
+                 type="number"
+                 value="{{ duration_weeks | default('8') }}"
+                 min="1" max="52"
+                 required
+                 aria-required="true">
+          <span class="form-hint">1 – 52 weeks</span>
+        </div>
+      </div>
+
+      <div class="planner-form-actions">
+        <button type="submit" id="generate-btn" class="btn btn--primary btn--lg">
+          ✨ Generate Roadmap
+        </button>
+        <a class="btn btn--ghost" href="{{ url_for('planner.planner_list') }}">
+          View Saved Roadmaps
+        </a>
+      </div>
+    </form>
+
+  </div><!-- /.planner-form-card -->
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  var form = document.getElementById("planner-form");
+  var btn  = document.getElementById("generate-btn");
+  if (!form || !btn) return;
+
+  form.addEventListener("submit", function () {
+    // Prevent double-submission
+    btn.disabled = true;
+    btn.textContent = "⏳ Generating…";
+    btn.setAttribute("aria-busy", "true");
+  });
+})();
+</script>
+{% endblock %}

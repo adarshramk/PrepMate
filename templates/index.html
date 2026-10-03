@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}PrepMate — Placement Preparation Platform{% endblock %}
+
+{% block content %}
+<!-- ── Hero ─────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">🚀 Built for placement success</div>
+    <h1 class="hero-title">
+      Ace Your <span class="text-accent">Placements</span><br />
+      with PrepMate
+    </h1>
+    <p class="hero-subtitle">
+      A structured, all-in-one preparation platform covering DSA, aptitude,
+      cloud, projects, and interview skills — so you walk in ready.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn--primary btn--lg" href="{{ url_for('auth.register') }}">
+        Get Started Free
+      </a>
+      <a class="btn btn--ghost btn--lg" href="{{ url_for('auth.login') }}">
+        Log In
+      </a>
+    </div>
+  </div>
+  <div class="hero-visual" aria-hidden="true">
+    <div class="hero-card">
+      <div class="hero-card-row"><span>💻</span><span>DSA &amp; Programming</span></div>
+      <div class="hero-card-row"><span>🧮</span><span>Aptitude</span></div>
+      <div class="hero-card-row"><span>☁️</span><span>Cloud &amp; Networking</span></div>
+      <div class="hero-card-row"><span>🚀</span><span>Projects</span></div>
+      <div class="hero-card-row"><span>🎯</span><span>Interview Prep</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Features ──────────────────────────────────────────────────────── -->
+<section class="features">
+  <div class="container">
+    <h2 class="section-title">Everything you need to crack placements</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📚</div>
+        <h3>Structured Content</h3>
+        <p>Curated topics organised by importance and frequency in placement tests.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Goal Tracking</h3>
+        <p>Track your progress across every section and stay on schedule.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Quick Revision</h3>
+        <p>Cheat sheets and quick notes for last-minute revision before interviews.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🤝</div>
+        <h3>Community Driven</h3>
+        <p>Contributed resources from students who already cracked top companies.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🗺️</div>
+        <h3>AI-Powered Planner</h3>
+        <p>Generate a personalised weekly roadmap tailored to your target role and
+           current skill level. Powered by Amazon Bedrock with a reliable built-in fallback.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ───────────────────────────────────────────────────────────── -->
+<section class="cta-section">
+  <div class="container">
+    <h2>Ready to start your journey?</h2>
+    <p>Join thousands of students preparing smarter, not harder.</p>
+    <a class="btn btn--primary btn--lg" href="{{ url_for('auth.register') }}">
+      Create Free Account
+    </a>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}My Roadmaps — PrepMate{% endblock %}
+
+{% block content %}
+<section class="dash-header">
+  <div class="container planner-list-header">
+    <div>
+      <h1 class="dash-title">My <span class="text-accent">Roadmaps</span></h1>
+      <p class="dash-subtitle">Your saved preparation roadmaps.</p>
+    </div>
+    <a class="btn btn--primary" href="{{ url_for('planner.planner_new') }}">
+      ✨ New Roadmap
+    </a>
+  </div>
+</section>
+
+<div class="container planner-list-section">
+
+  {% if roadmaps %}
+    <ul class="roadmap-cards" aria-label="Saved roadmaps">
+      {% for r in roadmaps %}
+      <li class="roadmap-card">
+        <div class="roadmap-card-main">
+          <div class="roadmap-card-info">
+            <div class="roadmap-card-header-row">
+              {% if r['source'] == 'ai' %}
+                <span class="source-badge source-badge--ai">🤖 AI-generated</span>
+              {% else %}
+                <span class="source-badge source-badge--fallback">📋 Rule-based</span>
+              {% endif %}
+              <span class="roadmap-date">{{ r['created_at'][:10] }}</span>
+            </div>
+            <h2 class="roadmap-card-title">{{ r['title'] }}</h2>
+            <div class="roadmap-meta-row">
+              <span class="planner-meta-item">🎯 {{ r['target_role'] }}</span>
+              <span class="planner-meta-item">⏱ {{ r['hours_per_day'] }}h/day</span>
+              <span class="planner-meta-item">📆 {{ r['duration_weeks'] }} weeks</span>
+            </div>
+          </div>
+          <div class="roadmap-card-actions">
+            <a class="btn btn--ghost btn--sm"
+               href="{{ url_for('planner.planner_review', roadmap_id=r['id']) }}">
+              View →
+            </a>
+            <form method="POST"
+                  action="{{ url_for('planner.planner_delete', roadmap_id=r['id']) }}"
+                  style="display:inline"
+                  onsubmit="return confirm('Delete this roadmap?')">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn--danger btn--sm" aria-label="Delete roadmap">
+                🗑
+              </button>
+            </form>
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+
+  {% else %}
+    <div class="tasks-empty">
+      <span class="tasks-empty-icon" aria-hidden="true">🗺️</span>
+      <p>No roadmaps yet.</p>
+      <p class="tasks-empty-hint">
+        <a href="{{ url_for('planner.planner_new') }}">Generate your first roadmap →</a>
+      </p>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

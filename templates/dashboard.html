@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — PrepMate{% endblock %}
+
+{% block content %}
+<!-- ── Dashboard Header ──────────────────────────────────────────────── -->
+<section class="dash-header">
+  <div class="container">
+    <h1 class="dash-title">
+      Welcome, <span class="text-accent">{{ user['name'] }}</span>! 👋
+    </h1>
+    <p class="dash-subtitle">
+      Pick a section below to view and manage your preparation tasks.
+    </p>
+  </div>
+</section>
+
+<!-- ── Progress Overview ─────────────────────────────────────────────── -->
+<section class="dash-stats container" aria-label="Preparation statistics">
+  <div class="stat-card">
+    <div class="stat-number">{{ stats.total }}</div>
+    <div class="stat-label">Total Tasks</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">{{ stats.completed }}</div>
+    <div class="stat-label">Completed</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">{{ stats.pending }}</div>
+    <div class="stat-label">Pending</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">{{ stats.completion_pct }}%</div>
+    <div class="stat-label">Overall Progress</div>
+  </div>
+</section>
+
+<!-- ── Quick Actions ─────────────────────────────────────────────────── -->
+<div class="container dash-actions">
+  <a class="btn btn--primary" href="{{ url_for('tasks.task_list') }}">
+    📋 All Tasks
+  </a>
+  <a class="btn btn--secondary" href="{{ url_for('planner.planner_new') }}">
+    ✨ Generate Roadmap
+  </a>
+  <a class="btn btn--ghost" href="{{ url_for('planner.planner_list') }}">
+    🗺️ My Roadmaps
+  </a>
+</div>
+
+<!-- ── Prep Sections ─────────────────────────────────────────────────── -->
+<section class="dash-sections container">
+  <h2 class="section-title">Preparation Areas</h2>
+  <div class="sections-grid">
+    {% for section in sections %}
+    <article class="section-card" aria-label="{{ section.title }}">
+      <div class="section-card-header">
+        <span class="section-icon" aria-hidden="true">{{ section.icon }}</span>
+      </div>
+      <h3 class="section-card-title">{{ section.title }}</h3>
+      <p class="section-card-desc">{{ section.description }}</p>
+
+      <ul class="topic-list" aria-label="Topics in {{ section.title }}">
+        {% for topic in section.topics %}
+          <li class="topic-item">
+            <span class="topic-dot" aria-hidden="true">●</span>
+            {{ topic }}
+          </li>
+        {% endfor %}
+      </ul>
+
+      <a class="btn btn--ghost btn--full section-btn"
+         href="{{ url_for('tasks.task_list', category=section.slug) }}"
+         aria-label="View tasks for {{ section.title }}">
+        View Tasks →
+      </a>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

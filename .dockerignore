@@ -1,0 +1,38 @@
+# ── Secrets and local config ──────────────────────────────────────────────
+.env
+*.env
+
+# ── Development / test artifacts ──────────────────────────────────────────
+requirements-dev.txt
+tests/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ── Python bytecode ───────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# ── Local database (production DB lives on the mounted volume at /data) ───
+*.db
+*.sqlite3
+
+# ── Version control ───────────────────────────────────────────────────────
+.git/
+.gitignore
+
+# ── IDE and OS files ──────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ── Deployment test artifacts ─────────────────────────────────────────────
+bedrock-test.json
+
+# ── Logs ──────────────────────────────────────────────────────────────────
+*.log

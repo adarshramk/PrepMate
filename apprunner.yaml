@@ -1,0 +1,25 @@
+version: 1.0
+runtime: python311
+build:
+  commands:
+    build:
+      - pip install -r requirements.txt
+run:
+  runtime-version: "3.11"
+  command: gunicorn --bind 0.0.0.0:8080 --workers 2 --timeout 60 wsgi:application
+  network:
+    port: 8080
+    env: PORT
+  env:
+    - name: FLASK_ENV
+      value: production
+    - name: DATABASE_PATH
+      value: /tmp/prepmate.db
+    - name: BEDROCK_REGION
+      value: us-east-1
+    - name: BEDROCK_MODEL_ID
+      value: amazon.nova-micro-v1:0
+    - name: BEDROCK_TIMEOUT
+      value: "30"
+    # FLASK_SECRET_KEY must be set as a secret in App Runner console
+    # AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY: leave blank; use App Runner instance role

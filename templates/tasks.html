@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+{% block title %}
+  {% if active_category %}{{ active_category }} Tasks{% else %}All Tasks{% endif %} — PrepMate
+{% endblock %}
+
+{% block content %}
+
+<!-- ── Page Header ──────────────────────────────────────────────────── -->
+<section class="dash-header">
+  <div class="container tasks-page-header">
+    <div>
+      <h1 class="dash-title">
+        {% if active_category %}
+          <span class="text-accent">{{ active_category }}</span> Tasks
+        {% else %}
+          All Tasks
+        {% endif %}
+      </h1>
+      <p class="dash-subtitle">
+        {% if active_category %}
+          Showing tasks for <strong>{{ active_category }}</strong>.
+          <a href="{{ url_for('tasks.task_list') }}">View all →</a>
+        {% else %}
+          All your preparation tasks in one place.
+        {% endif %}
+      </p>
+    </div>
+    <a class="btn btn--ghost" href="{{ url_for('dashboard.dashboard') }}" aria-label="Back to dashboard">
+      ← Dashboard
+    </a>
+  </div>
+</section>
+
+<!-- ── Category Filter Tabs ──────────────────────────────────────────── -->
+<div class="container tasks-filter-bar" role="navigation" aria-label="Filter by category">
+  <a class="filter-tab {% if not active_category %}filter-tab--active{% endif %}"
+     href="{{ url_for('tasks.task_list') }}">All</a>
+  {% for slug, name in category_slugs.items() %}
+  <a class="filter-tab {% if active_category == name %}filter-tab--active{% endif %}"
+     href="{{ url_for('tasks.task_list', category=slug) }}">{{ name }}</a>
+  {% endfor %}
+</div>
+
+<!-- ── Create Task Form ──────────────────────────────────────────────── -->
+<section class="container tasks-create-section">
+  <details class="create-task-details" {% if request.args.get('open') %}open{% endif %}>
+    <summary class="create-task-summary">
+      <span>➕ Add New Task</span>
+    </summary>
+    <form method="POST"
+          action="{{ url_for('tasks.task_create') }}"
+          class="create-task-form"
+          novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="redirect_category" value="{{ raw_cat }}">
+
+      <!-- Title -->
+      <div class="form-group">
+        <label class="form-label" for="task-title">Task Title <span aria-hidden="true">*</span></label>
+        <input class="form-input"
+               id="task-title"
+               name="title"
+               type="text"
+               placeholder="e.g. Solve 5 LeetCode medium problems"
+               maxlength="200"
+               required
+               aria-required="true">
+      </div>
+
+      <!-- Category -->
+      <div class="form-group">
+        <label class="form-label" for="task-category">Category <span aria-hidden="true">*</span></label>
+        <select class="form-input form-select"
+                id="task-category"
+                name="category"
+                required
+                aria-required="true">
+          <option value="" disabled selected>Select a category…</option>
+          {% for cat in categories %}
+          <option value="{{ cat }}"
+            {% if active_category == cat %}selected{% endif %}>{{ cat }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label class="form-label" for="task-desc">Description <span class="form-hint">(optional)</span></label>
+        <textarea class="form-input form-textarea"
+                  id="task-desc"
+                  name="description"
+                  rows="2"
+                  placeholder="Any extra notes about this task…"></textarea>
+      </div>
+
+      <!-- Due Date -->
+      <div class="form-group">
+        <label class="form-label" for="task-due">Due Date <span class="form-hint">(optional)</span></label>
+        <input class="form-input"
+               id="task-due"
+               name="due_date"
+               type="date">
+      </div>
+
+      <button type="submit" class="btn btn--primary">Create Task</button>
+    </form>
+  </details>
+</section>
+
+<!-- ── Task List ─────────────────────────────────────────────────────── -->
+<section class="container tasks-list-section">
+
+  {% if tasks %}
+    <!-- Pending tasks -->
+    {% set pending_tasks = tasks | selectattr('is_complete', 'equalto', 0) | list %}
+    {% set done_tasks    = tasks | selectattr('is_complete', 'equalto', 1) | list %}
+
+    {% if pending_tasks %}
+    <h2 class="tasks-group-title">Pending <span class="tasks-count">{{ pending_tasks | length }}</span></h2>
+    <ul class="task-cards" aria-label="Pending tasks">
+      {% for task in pending_tasks %}
+        {{ _render_task(task, raw_cat) }}
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if done_tasks %}
+    <h2 class="tasks-group-title tasks-group-title--done">
+      Completed <span class="tasks-count">{{ done_tasks | length }}</span>
+    </h2>
+    <ul class="task-cards task-cards--done" aria-label="Completed tasks">
+      {% for task in done_tasks %}
+        {{ _render_task(task, raw_cat) }}
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+  {% else %}
+    <div class="tasks-empty">
+      <span class="tasks-empty-icon" aria-hidden="true">📭</span>
+      <p>No tasks yet{% if active_category %} for <strong>{{ active_category }}</strong>{% endif %}.</p>
+      <p class="tasks-empty-hint">Use the form above to add your first task.</p>
+    </div>
+  {% endif %}
+
+</section>
+
+{% endblock %}
+
+{# ── Task card macro ──────────────────────────────────────────────────── #}
+{% macro _render_task(task, raw_cat) %}
+<li class="task-card {% if task['is_complete'] %}task-card--done{% endif %}"
+    aria-label="{{ task['title'] }}">
+
+  <div class="task-card-main">
+    <div class="task-card-info">
+      <span class="task-category-badge">{{ task['category'] }}</span>
+      <h3 class="task-title {% if task['is_complete'] %}task-title--done{% endif %}">
+        {{ task['title'] }}
+      </h3>
+      {% if task['description'] %}
+        <p class="task-desc">{{ task['description'] }}</p>
+      {% endif %}
+      <div class="task-meta">
+        {% if task['due_date'] %}
+          <span class="task-meta-item">📅 Due {{ task['due_date'] }}</span>
+        {% endif %}
+        <span class="task-meta-item">🕐 Added {{ task['created_at'][:10] }}</span>
+      </div>
+    </div>
+
+    <div class="task-card-actions">
+      {% if task['is_complete'] %}
+        <!-- Reopen -->
+        <form method="POST"
+              action="{{ url_for('tasks.task_reopen', task_id=task['id']) }}"
+              style="display:inline">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="redirect_category" value="{{ raw_cat }}">
+          <button type="submit"
+                  class="btn btn--ghost btn--sm"
+                  aria-label="Reopen task: {{ task['title'] }}">
+            ↩ Reopen
+          </button>
+        </form>
+      {% else %}
+        <!-- Complete -->
+        <form method="POST"
+              action="{{ url_for('tasks.task_complete', task_id=task['id']) }}"
+              style="display:inline">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="redirect_category" value="{{ raw_cat }}">
+          <button type="submit"
+                  class="btn btn--primary btn--sm"
+                  aria-label="Mark complete: {{ task['title'] }}">
+            ✓ Done
+          </button>
+        </form>
+      {% endif %}
+
+      <!-- Delete -->
+      <form method="POST"
+            action="{{ url_for('tasks.task_delete', task_id=task['id']) }}"
+            style="display:inline"
+            onsubmit="return confirm('Delete this task?')">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="redirect_category" value="{{ raw_cat }}">
+        <button type="submit"
+                class="btn btn--danger btn--sm"
+                aria-label="Delete task: {{ task['title'] }}">
+          🗑 Delete
+        </button>
+      </form>
+    </div>
+  </div>
+
+</li>
+{% endmacro %}
